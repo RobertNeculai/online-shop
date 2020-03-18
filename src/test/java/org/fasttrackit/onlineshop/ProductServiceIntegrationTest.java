@@ -3,6 +3,7 @@ package org.fasttrackit.onlineshop;
 import org.fasttrackit.onlineshop.domain.Product;
 import org.fasttrackit.onlineshop.exception.ResourceNotFoundException;
 import org.fasttrackit.onlineshop.service.ProductService;
+import org.fasttrackit.onlineshop.steps.ProductTestSteps;
 import org.fasttrackit.onlineshop.transfer.product.SaveProductRequest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -21,10 +22,12 @@ public class ProductServiceIntegrationTest {
     // field = instance variables
     @Autowired
     private ProductService productService;
+    @Autowired
+    private ProductTestSteps productTestSteps;
     @Test
     void createProduct_whenValidRequest_thenProductIsCreated()
     {
-        createProduct();
+        productTestSteps.createProduct();
     }
     @Test
     void createProduct_whenMissingName_thenExceptionIsThrown(){
@@ -43,7 +46,7 @@ public class ProductServiceIntegrationTest {
     @Test
     void getProduct_whenExistingProduct_thenProductIsReturned()
     {
-        Product product=createProduct();
+        Product product=productTestSteps.createProduct();
         Product response = productService.getProduct(product.getId());
         assertThat(response,notNullValue());
         assertThat(product.getName(),is(response.getName()));
@@ -60,7 +63,7 @@ public class ProductServiceIntegrationTest {
     @Test
     void updateProduct_whenValidRequest_thenReturnUpdatedProduct()
     {
-        Product product=createProduct();
+        Product product=productTestSteps.createProduct();
         SaveProductRequest request=new SaveProductRequest();
         request.setName(product.getName()+ "updated");
         request.setDescription(product.getDescription()+ "updated");
@@ -77,22 +80,10 @@ public class ProductServiceIntegrationTest {
     @Test
     void deleteProduct_whenExistingProduct_thenProductDoesNotExistAnymore()
     {
-        Product product=createProduct();
+        Product product=productTestSteps.createProduct();
         productService.deleteProduct(product.getId());
         Assertions.assertThrows(ResourceNotFoundException.class,() -> productService.getProduct(product.getId()));
 
     }
-    private Product createProduct() {
-        SaveProductRequest request= new SaveProductRequest();
-        request.setName("Phone");
-        request.setQuantity(100);
-        request.setPrice(300.5);
-        Product product = productService.createProduct(request);
-        assertThat(product,notNullValue());
-        assertThat(product.getId(),greaterThan(0L));
-        assertThat(product.getName(),is(request.getName()));
-        assertThat(product.getPrice(),is(request.getPrice()));
-        assertThat(product.getQuantity(),is(request.getQuantity()));
-        return product;
-    }
+
 }
