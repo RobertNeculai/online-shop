@@ -14,7 +14,7 @@ import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.notNullValue;
 
 @SpringBootTest
-public class CustermServiceIntegrationTest {
+public class CustomerServiceIntegrationTest {
 
     @Autowired
     private CustomerService customerService;
