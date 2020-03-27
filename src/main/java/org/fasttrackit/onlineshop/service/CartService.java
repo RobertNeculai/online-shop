@@ -58,11 +58,8 @@ public class CartService {
         CartResponse cartResponse=new CartResponse();
         cartResponse.setId(cart.getId());
         Set<ProductInCartResponse> productDtos=new HashSet<>();
-        Iterator<Product> productIterator = cart.getProducts().iterator();
-        while(productIterator.hasNext())
-        {
-            Product nextProduct = productIterator.next();
-            ProductInCartResponse productDto=new ProductInCartResponse();
+        for (Product nextProduct : cart.getProducts()) {
+            ProductInCartResponse productDto = new ProductInCartResponse();
             productDto.setId(nextProduct.getId());
             productDto.setName(nextProduct.getName());
             productDto.setPrice(nextProduct.getPrice());
